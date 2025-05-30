@@ -7,36 +7,29 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'QR Code Scanner',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: QRScannerPage(),
+      home: QRViewExample(),
     );
   }
 }
 
-class QRScannerPage extends StatefulWidget {
+class QRViewExample extends StatefulWidget {
   @override
-  _QRScannerPageState createState() => _QRScannerPageState();
+  _QRViewExampleState createState() => _QRViewExampleState();
 }
 
-class _QRScannerPageState extends State<QRScannerPage> {
+class _QRViewExampleState extends State<QRViewExample> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
-  String qrText = 'Scan a QR code';
+  String? qrText;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('QR Scanner'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: Text('QR Scanner')),
       body: Column(
         children: <Widget>[
           Expanded(
-            flex: 4,
+            flex: 5,
             child: QRView(
               key: qrKey,
               onQRViewCreated: _onQRViewCreated,
@@ -45,10 +38,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
           Expanded(
             flex: 1,
             child: Center(
-              child: Text(
-                'Result: $qrText',
-                style: TextStyle(fontSize: 18),
-              ),
+              child: Text(qrText ?? 'Scan a code'),
             ),
           )
         ],
@@ -60,7 +50,7 @@ class _QRScannerPageState extends State<QRScannerPage> {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
       setState(() {
-        qrText = scanData.code ?? '';
+        qrText = scanData.code;
       });
     });
   }
